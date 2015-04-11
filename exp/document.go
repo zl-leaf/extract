@@ -11,15 +11,31 @@ import(
 )
 
 type Document struct {
-    StuDomTree *dom.StuDomNode
+    StuDomTree *dom.StuDomTree
     Keywords Words
     Setting *Setting
+}
+
+/**
+ * 获取标题
+ */
+func (doc *Document) Title() string {
+    tree := doc.StuDomTree
+    return tree.Title()
+}
+
+/**
+ * 获取body中的内容
+ */
+func (doc *Document) Body() string {
+    tree := doc.StuDomTree
+    return tree.Body()
 }
 
 func (doc *Document) Load(fi io.Reader)  {
     stuDomTree,err := studom.Parse(fi)
     if err == nil {
-        studom.CutStuDomTree(stuDomTree, true)// 获取剪枝后的studom树
+        stuDomTree.CutStuDomTree()
         doc.StuDomTree = stuDomTree
     }
     initKeywords(doc)
@@ -29,7 +45,7 @@ func (doc *Document) Load(fi io.Reader)  {
 func (doc *Document) LoadHTML(html string)  {
     stuDomTree,err := studom.ParseString(html)
     if err == nil {
-        studom.CutStuDomTree(stuDomTree, true)// 获取剪枝后的studom树
+        stuDomTree.CutStuDomTree()
         doc.StuDomTree = stuDomTree
     }
     initKeywords(doc)
